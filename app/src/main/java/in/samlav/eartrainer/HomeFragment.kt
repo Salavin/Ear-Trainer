@@ -1,20 +1,21 @@
-package in.samlav.eartrainer
+package `in`.samlav.eartrainer
 
+import `in`.samlav.eartrainer.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import `in`.samlav.eartrainer.databinding.FragmentSecondBinding
+import `in`.samlav.eartrainer.databinding.FragmentHomeBinding
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class SecondFragment : Fragment()
+class HomeFragment : Fragment()
 {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,7 +27,7 @@ class SecondFragment : Fragment()
     ): View?
     {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -35,8 +36,11 @@ class SecondFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        binding.buttonToTest.setOnClickListener {
+            findNavController().navigate(R.id.action_HomeFragment_to_TestFragment)
+        }
+        binding.buttonToSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_HomeFragment_to_settingsFragment)
         }
     }
 
