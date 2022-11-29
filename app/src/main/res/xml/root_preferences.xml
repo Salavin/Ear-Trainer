@@ -1,34 +1,57 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="Test Settings">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+        <ListPreference
+            android:defaultValue="10"
+            app:defaultValue="10"
+            app:entries="@array/num_question_entries"
+            app:entryValues="@array/num_question_values"
+            app:key="numQuestions"
+            app:title="Number of Questions"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            android:defaultValue="10"
+            app:defaultValue="10"
+            app:entries="@array/time_to_answer_entries"
+            app:entryValues="@array/time_to_answer_values"
+            app:key="timeToAnswer"
+            app:title="Time to Answer (seconds)"
             app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
+        <SwitchPreference
+            app:key="immediateFeedback"
+            app:title="Immediate Feedback"
+            app:defaultValue="true" />
 
-    <PreferenceCategory app:title="@string/sync_header">
+        <in.samlav.eartrainer.CustomSeekBar
+            android:key="toneTime"
+            android:layout="@layout/custom_seek_bar"
+            android:title="Time for Tone (seconds)"
+            android:id="@+id/tone_time"
+            app:title="Length Tone is Played for (milliseconds)" />
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+        <SeekBarPreference
+            android:defaultValue="5"
+            android:title="% Deviation from Center of Bin"
+            app:showSeekBarValue="true"
+            app:min="0"
+            android:max="25"
+            app:key="deviation" />
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <ListPreference
+            android:title="Number of Bins"
+            android:defaultValue="31"
+            android:key="numBins"
+            app:entries="@array/num_bins_entries"
+            app:entryValues="@array/num_bins_values"
+            app:useSimpleSummaryProvider="true" />
+
+        <MultiSelectListPreference
+            android:title="Which Bands to Select From"
+            android:key="whichBins" />
 
     </PreferenceCategory>
 

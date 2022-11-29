@@ -9,4 +9,169 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="num_question_entries">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+        <item>100</item>
+        <item>Unlimited</item>
+    </string-array>
+    <string-array name="num_question_values">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+        <item>100</item>
+        <item>inf</item>
+    </string-array>
+
+    <string-array name="time_to_answer_entries">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>Unlimited</item>
+    </string-array>
+
+    <string-array name="time_to_answer_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>inf</item>
+    </string-array>
+
+    <string-array name="num_bins_entries">
+        <item>10 (1 octave bands)</item>
+        <item>15</item>
+        <item>20 (½ octave bands)</item>
+        <item>31 (⅓ octave bands)</item>
+        <item>Unlimited (you guess)</item>
+    </string-array>
+
+    <string-array name="num_bins_values">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>31</item>
+        <item>inf</item>
+    </string-array>
+
+    <string-array name="ten_bin_entries">
+        <item>31.5</item>
+        <item>63</item>
+        <item>125</item>
+        <item>250</item>
+        <item>500</item>
+        <item>1k</item>
+        <item>2k</item>
+        <item>4k</item>
+        <item>8k</item>
+        <item>16k</item>
+    </string-array>
+
+    <string-array name="fifteen_bin_entries">
+        <item>25</item>
+        <item>40</item>
+        <item>63</item>
+        <item>100</item>
+        <item>160</item>
+        <item>250</item>
+        <item>400</item>
+        <item>630</item>
+        <item>1k</item>
+        <item>1.6k</item>
+        <item>2.5k</item>
+        <item>4k</item>
+        <item>8.3k</item>
+        <item>10k</item>
+        <item>16k</item>
+    </string-array>
+
+    <string-array name="twenty_bin_entries">
+        <item>20</item>
+        <item>40</item>
+        <item>90</item>
+        <item>150</item>
+        <item>220</item>
+        <item>320</item>
+        <item>450</item>
+        <item>600</item>
+        <item>800</item>
+        <item>1.2k</item>
+        <item>2k</item>
+        <item>3k</item>
+        <item>4.5k</item>
+        <item>6k</item>
+        <item>8k</item>
+        <item>10k</item>
+        <item>12k</item>
+        <item>14k</item>
+        <item>17k</item>
+        <item>20k</item>
+    </string-array>
+
+    <string-array name="thirty_one_bin_entries">
+        <item>20</item>
+        <item>25</item>
+        <item>31.5</item>
+        <item>40</item>
+        <item>50</item>
+        <item>63</item>
+        <item>80</item>
+        <item>100</item>
+        <item>125</item>
+        <item>160</item>
+        <item>200</item>
+        <item>250</item>
+        <item>315</item>
+        <item>400</item>
+        <item>500</item>
+        <item>630</item>
+        <item>800</item>
+        <item>1k</item>
+        <item>1.25k</item>
+        <item>1.6k</item>
+        <item>2k</item>
+        <item>2.5k</item>
+        <item>3.15k</item>
+        <item>4k</item>
+        <item>5k</item>
+        <item>6.3k</item>
+        <item>8k</item>
+        <item>10k</item>
+        <item>12.5k</item>
+        <item>16k</item>
+        <item>20k</item>
+    </string-array>
+
+    <string-array name="empty_array" />
 </resources>
