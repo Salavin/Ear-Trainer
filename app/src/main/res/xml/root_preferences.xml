@@ -53,6 +53,19 @@
             android:title="Which Bands to Exclude"
             android:key="whichBins" />
 
+        <SwitchPreference
+            app:key="showExcluded"
+            app:title="Show Disabled Bins"
+            app:defaultValue="false" />
+
+        <SeekBarPreference
+            android:defaultValue="1"
+            app:title="Number of Tries"
+            app:showSeekBarValue="true"
+            app:key="numTries"
+            app:min="1"
+            android:max="10" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

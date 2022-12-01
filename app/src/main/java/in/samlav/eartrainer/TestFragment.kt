@@ -67,6 +67,10 @@ class TestFragment : Fragment()
             }
             if (preferences.getStringSet("whichBins", null)?.contains(bin) == true)
             {
+                if (!preferences.getBoolean("showExcluded", false))
+                {
+                    continue
+                }
                 button.isEnabled = false
             }
             binding.root.findViewById<LinearLayout>(R.id.bin_container).addView(button)
