@@ -17,7 +17,7 @@ class SettingsFragment : PreferenceFragmentCompat()
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         numBins = findPreference("numBins")!!
         whichBins = findPreference("whichBins")!!
-        numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
+        numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             changeBins(newValue as String)
             return@OnPreferenceChangeListener true
         }
@@ -30,31 +30,23 @@ class SettingsFragment : PreferenceFragmentCompat()
         {
             "10" ->
             {
-                whichBins.isEnabled = true
                 whichBins.entries = resources.getStringArray(R.array.ten_bin_entries)
                 whichBins.entryValues = resources.getStringArray(R.array.ten_bin_entries)
             }
             "15" ->
             {
-                whichBins.isEnabled = true
                 whichBins.entries = resources.getStringArray(R.array.fifteen_bin_entries)
                 whichBins.entryValues = resources.getStringArray(R.array.fifteen_bin_entries)
             }
             "20" ->
             {
-                whichBins.isEnabled = true
                 whichBins.entries = resources.getStringArray(R.array.twenty_bin_entries)
                 whichBins.entryValues = resources.getStringArray(R.array.twenty_bin_entries)
             }
             "31" ->
             {
-                whichBins.isEnabled = true
                 whichBins.entries = resources.getStringArray(R.array.thirty_one_bin_entries)
                 whichBins.entryValues = resources.getStringArray(R.array.thirty_one_bin_entries)
-            }
-            "inf" ->
-            {
-                whichBins.isEnabled = false
             }
         }
     }

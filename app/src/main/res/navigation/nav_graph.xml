@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/HomeFragment"
         android:name="in.samlav.eartrainer.HomeFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Home"
         tools:layout="@layout/fragment_home">
 
         <action
@@ -21,19 +21,31 @@
     <fragment
         android:id="@+id/TestFragment"
         android:name="in.samlav.eartrainer.TestFragment"
-        android:label="@string/second_fragment_label"
+        android:label="Test"
         tools:layout="@layout/fragment_test">
 
         <action
             android:id="@+id/action_TestFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_TestFragment_to_resultsFragment"
+            app:destination="@id/resultsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="in.samlav.eartrainer.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:label="Settings" >
         <action
             android:id="@+id/action_settingsFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="in.samlav.eartrainer.ResultsFragment"
+        android:label="Results"
+        tools:layout="@layout/fragment_results" >
+        <action
+            android:id="@+id/action_resultsFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
 </navigation>

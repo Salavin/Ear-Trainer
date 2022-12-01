@@ -74,7 +74,6 @@
         <item>15</item>
         <item>20 (½ octave bands)</item>
         <item>31 (⅓ octave bands)</item>
-        <item>Unlimited (you guess)</item>
     </string-array>
 
     <string-array name="num_bins_values">
@@ -82,7 +81,6 @@
         <item>15</item>
         <item>20</item>
         <item>31</item>
-        <item>inf</item>
     </string-array>
 
     <string-array name="ten_bin_entries">

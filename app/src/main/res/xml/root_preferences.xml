@@ -50,7 +50,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <MultiSelectListPreference
-            android:title="Which Bands to Select From"
+            android:title="Which Bands to Exclude"
             android:key="whichBins" />
 
     </PreferenceCategory>
