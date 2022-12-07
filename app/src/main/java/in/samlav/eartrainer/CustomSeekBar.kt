@@ -11,9 +11,9 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 
 
-const val MIN = 25
-const val MAX = 500
-const val STEP = 25
+const val MIN = 250
+const val MAX = 5000
+const val STEP = 250
 
 class CustomSeekBar @JvmOverloads constructor(
     context: Context?,
@@ -41,7 +41,7 @@ class CustomSeekBar @JvmOverloads constructor(
                 val progressCustom = (p1 / STEP) * 0.25
                 progress.text = String.format("%.2f", progressCustom)
                 preferences.edit {
-                    putInt("toneTime", (p1 / STEP) * 25)
+                    putInt("toneTime", (p1 / STEP) * 250)
                     commit()
                 }
             }

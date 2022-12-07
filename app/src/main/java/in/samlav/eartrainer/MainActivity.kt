@@ -1,15 +1,18 @@
 package `in`.samlav.eartrainer
 
+import `in`.samlav.eartrainer.databinding.ActivityMainBinding
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import `in`.samlav.eartrainer.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity()
 {
@@ -57,6 +60,15 @@ class MainActivity : AppCompatActivity()
     override fun onSupportNavigateUp(): Boolean
     {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+        if (navController.currentDestination?.id == R.id.TestFragment)
+        {
+            val navHostFragment =
+                supportFragmentManager.primaryNavigationFragment as NavHostFragment?
+            val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
+            val fragment: Fragment? = fragmentManager.primaryNavigationFragment
+
+            return (fragment as TestFragment).backPressed()
+        }
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }

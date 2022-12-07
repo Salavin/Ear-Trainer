@@ -31,5 +31,15 @@
     <string name="time_left">Time Left:</string>
 
     <string name="hz">%1$sHz</string>
+    <string name="time">%1$s:%2$s</string>
+    <string name="questionNum">%1$d/%2$s</string>
     <string name="take_test">Take Test</string>
+    <string name="tries_left">Tries Left:</string>
+    <string name="home">Home</string>
+    <string name="retry">Retry</string>
+    <string name="score">Score:</string>
+    <string name="your_score">Your score:</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="ear_trainer">Ear Trainer</string>
 </resources>

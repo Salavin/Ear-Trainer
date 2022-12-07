@@ -66,6 +66,14 @@
             app:min="1"
             android:max="10" />
 
+        <SeekBarPreference
+            android:defaultValue="3"
+            app:title="Time Feedback is Shown (seconds)"
+            app:showSeekBarValue="true"
+            app:key="feedbackTime"
+            app:min="1"
+            android:max="10" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
