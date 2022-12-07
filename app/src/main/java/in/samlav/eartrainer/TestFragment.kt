@@ -131,13 +131,20 @@ class TestFragment : Fragment()
             else -> preferences.getString("numQuestions", "10").toString().toInt()
         }
 
-        if (preferences.getString("timetoAnswer", "10") == "inf")
+        if (preferences.getString("timeToAnswer", "10") == "inf")
         {
             binding.root.findViewById<TextView>(R.id.time_time_left).text = "∞"
             useTimer = false
         }
 
-        binding.root.findViewById<TextView>(R.id.number_score).text = resources.getString(R.string.questionNum, 0, 0.toString())
+        if (preferences.getBoolean("immediateFeedback", true))
+        {
+            binding.root.findViewById<TextView>(R.id.number_score).text = resources.getString(R.string.questionNum, 0, 0.toString())
+        }
+        else
+        {
+            binding.root.findViewById<TextView>(R.id.number_score).text = "?"
+        }
 
         // Thread defs
 
@@ -148,7 +155,15 @@ class TestFragment : Fragment()
                     (--timeLeft).toString()
                 if (timeLeft == 0)
                 {
-                    binding.root.findViewById<TextView>(R.id.number_score).text = resources.getString(R.string.questionNum, numCorrect, questionNum.toString())
+                    if (preferences.getBoolean("immediateFeedback", true))
+                    {
+                        binding.root.findViewById<TextView>(R.id.number_score).text =
+                            resources.getString(
+                                R.string.questionNum,
+                                numCorrect,
+                                questionNum.toString()
+                            )
+                    }
                     disableButtons(
                         preferences.getBoolean("immediateFeedback", true),
                         curFreqBin,
@@ -164,49 +179,52 @@ class TestFragment : Fragment()
         }
 
         questionThread = Thread {
-            enableButtons()
-            if (++questionNum <= numQuestions)
+            if (findNavController().currentDestination?.id == R.id.TestFragment)
             {
-                setQuestionNumText(questionNum, !useTimer)
+                enableButtons()
+                if (++questionNum <= numQuestions)
+                {
+                    setQuestionNumText(questionNum, !useTimer)
 
-                curFreqBin = possibleBins.random()
-                val freq: Int = if (preferences.getInt("deviation", 0) > 0)
-                {
-                    (curFreqBin * (((Random.nextInt(0, preferences.getInt("deviation", 0)) * randomPlusOrMinus()).toFloat() / 100f) + 1)).roundToInt()
-                } else
-                {
-                    curFreqBin
-                }
-                playTone(freq, preferences.getInt("toneTime", 1000))
-                triesLeft = preferences.getInt("numTries", 1)
-                binding.root.findViewById<TextView>(R.id.number_try).text = triesLeft.toString()
-                if (useTimer)
-                {
-                    binding.root.findViewById<TextView>(R.id.time_time_left).text = "--"
-                    timeLeft = preferences.getString("timeToAnswer", "10")?.toInt()!!
-                    timerEnabled = true
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        if (timerEnabled)
-                        {
-                            binding.root.findViewById<TextView>(R.id.time_time_left).text =
-                                preferences.getString("timeToAnswer", "10")
-                        }}, preferences.getInt("toneTime", 1000).toLong())
-                    Handler(Looper.getMainLooper()).postDelayed(timerThread, preferences.getInt("toneTime", 1000).toLong() + 1000)
+                    curFreqBin = possibleBins.random()
+                    val freq: Int = if (preferences.getInt("deviation", 0) > 0)
+                    {
+                        (curFreqBin * (((Random.nextInt(0, preferences.getInt("deviation", 0)) * randomPlusOrMinus()).toFloat() / 100f) + 1)).roundToInt()
+                    } else
+                    {
+                        curFreqBin
+                    }
+                    playTone(freq, preferences.getInt("toneTime", 1000))
+                    triesLeft = preferences.getInt("numTries", 1)
+                    binding.root.findViewById<TextView>(R.id.number_try).text = triesLeft.toString()
+                    if (useTimer)
+                    {
+                        binding.root.findViewById<TextView>(R.id.time_time_left).text = "--"
+                        timeLeft = preferences.getString("timeToAnswer", "10")?.toInt()!!
+                        timerEnabled = true
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (timerEnabled && (findNavController().currentDestination?.id == R.id.TestFragment))
+                            {
+                                binding.root.findViewById<TextView>(R.id.time_time_left).text =
+                                    preferences.getString("timeToAnswer", "10")
+                            }}, preferences.getInt("toneTime", 1000).toLong())
+                        Handler(Looper.getMainLooper()).postDelayed(timerThread, preferences.getInt("toneTime", 1000).toLong() + 1000)
+                    }
+                    else
+                    {
+                        binding.root.findViewById<TextView>(R.id.time_time_left).text = "∞"
+                    }
                 }
                 else
                 {
-                    binding.root.findViewById<TextView>(R.id.time_time_left).text = "∞"
+                    timerEnabled = false
+                    if (this::dialog.isInitialized && dialog.isShowing)
+                    {
+                        dialog.cancel()
+                    }
+                    val bundle = bundleOf(ARG_NUM_CORRECT to numCorrect, ARG_NUM_QUESTIONS to numQuestions)
+                    findNavController().navigate(R.id.action_TestFragment_to_resultsFragment, bundle)
                 }
-            }
-            else
-            {
-                timerEnabled = false
-                if (this::dialog.isInitialized && dialog.isShowing)
-                {
-                    dialog.cancel()
-                }
-                val bundle = bundleOf(ARG_NUM_CORRECT to numCorrect, ARG_NUM_QUESTIONS to numQuestions)
-                findNavController().navigate(R.id.action_TestFragment_to_resultsFragment, bundle)
             }
         }
 
@@ -231,14 +249,26 @@ class TestFragment : Fragment()
                 audioTrack.stop()
             }
             timerEnabled = false
-            binding.root.findViewById<TextView>(R.id.number_score).text = resources.getString(R.string.questionNum, ++numCorrect, questionNum.toString())
+            if (preferences.getBoolean("immediateFeedback", true))
+            {
+                binding.root.findViewById<TextView>(R.id.number_score).text =
+                    resources.getString(R.string.questionNum, ++numCorrect, questionNum.toString())
+            }
             disableButtons(preferences.getBoolean("immediateFeedback", true), curFreqBin, null)
             Handler(Looper.getMainLooper()).postDelayed(questionThread, preferences.getInt("feedbackTime", 3) * 1000L)
         }
         else if (triesLeft == 0)
         {
+            if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING)
+            {
+                audioTrack.stop()
+            }
             timerEnabled = false
-            binding.root.findViewById<TextView>(R.id.number_score).text = resources.getString(R.string.questionNum, numCorrect, questionNum.toString())
+            if (preferences.getBoolean("immediateFeedback", true))
+            {
+                binding.root.findViewById<TextView>(R.id.number_score).text =
+                    resources.getString(R.string.questionNum, numCorrect, questionNum.toString())
+            }
             disableButtons(preferences.getBoolean("immediateFeedback", true), curFreqBin, freq)
             Handler(Looper.getMainLooper()).postDelayed(questionThread, preferences.getInt("feedbackTime", 3) * 1000L)
         }
@@ -342,6 +372,10 @@ class TestFragment : Fragment()
                 {
                     button.isEnabled = false
                 }
+            }
+            else
+            {
+                button.isEnabled = false
             }
         }
     }

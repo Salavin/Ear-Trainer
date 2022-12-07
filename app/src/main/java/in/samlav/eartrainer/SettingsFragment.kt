@@ -2,8 +2,11 @@ package `in`.samlav.eartrainer
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.SeekBar
 import androidx.preference.*
+import androidx.core.content.edit
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
+
 
 class SettingsFragment : PreferenceFragmentCompat()
 {
@@ -11,23 +14,41 @@ class SettingsFragment : PreferenceFragmentCompat()
     lateinit var whichBins: MultiSelectListPreference
     lateinit var immediateFeedback: SwitchPreference
     lateinit var numTries: SeekBarPreference
-//    lateinit var preferences: SharedPreferences
+    lateinit var preferences: SharedPreferences
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        preferences = context?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
         numBins = findPreference("numBins")!!
         whichBins = findPreference("whichBins")!!
         immediateFeedback = findPreference("immediateFeedback")!!
+        numTries = findPreference("numTries")!!
 //        preferences = context?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
         numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             changeBins(newValue as String)
             return@OnPreferenceChangeListener true
         }
         immediateFeedback.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            numTries.isEnabled = newValue as Boolean
+            if (newValue == true)
+            {
+                preferences.edit {
+                    putInt("numTries", numTries.value)
+                    commit()
+                }
+                numTries.isEnabled = true
+            }
+            else
+            {
+                preferences.edit {
+                    putInt("numTries", 1)
+                    commit()
+                }
+                numTries.isEnabled = false
+            }
             return@OnPreferenceChangeListener true
         }
+        numTries.isEnabled = immediateFeedback.isChecked
         changeBins(numBins.value)
     }
 
