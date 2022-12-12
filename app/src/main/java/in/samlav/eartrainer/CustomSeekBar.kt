@@ -10,17 +10,24 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 
-
 const val MIN = 250
 const val MAX = 5000
 const val STEP = 250
 
+/**
+ * Custom seek bar that can display decimals. Still stores Ints in Preferences.
+ *
+ * @constructor
+ *
+ * @param context The Context this is associated with, through which it can access the current theme, resources, SharedPreferences, etc.
+ * @param attrs The attributes of the XML tag that is inflating the preference.
+ * @param defStyleAttr An attribute in the current theme that contains a reference to a style resource that supplies default values for the view. Can be 0 to not look for defaults.
+ */
 class CustomSeekBar @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet?,
     defStyleAttr: Int = android.R.attr.preferenceStyle
-) :
-    Preference(context!!, attrs, defStyleAttr)
+) : Preference(context!!, attrs, defStyleAttr)
 {
     var preferences: SharedPreferences
     private var value = 100

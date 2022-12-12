@@ -7,7 +7,11 @@ import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 
-
+/**
+ * Settings fragment
+ *
+ * @constructor Create empty Settings fragment
+ */
 class SettingsFragment : PreferenceFragmentCompat()
 {
     lateinit var numBins: ListPreference
@@ -24,7 +28,6 @@ class SettingsFragment : PreferenceFragmentCompat()
         whichBins = findPreference("whichBins")!!
         immediateFeedback = findPreference("immediateFeedback")!!
         numTries = findPreference("numTries")!!
-//        preferences = context?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
         numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             changeBins(newValue as String)
             return@OnPreferenceChangeListener true
@@ -52,6 +55,11 @@ class SettingsFragment : PreferenceFragmentCompat()
         changeBins(numBins.value)
     }
 
+    /**
+     * Helper method called every time the number of bins is changed; changes which entries array is used for the [whichBins] [Preference]
+     *
+     * @param newValue
+     */
     private fun changeBins(newValue: String)
     {
         when (newValue)

@@ -30,18 +30,19 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.random.Random
 
-
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * Test fragment
+ *
+ * @constructor Create empty Test fragment
  */
 class TestFragment : Fragment()
 {
-
     private var _binding: FragmentTestBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     private lateinit var preferences: SharedPreferences
     private var numBins = 0
     private lateinit var array: Array<out String>
@@ -50,7 +51,6 @@ class TestFragment : Fragment()
     private lateinit var generatedSnd: ByteArray
 
     private var questionNum = 0
-    private lateinit var questionThread: Thread
     private lateinit var possibleBins: MutableList<Int>
     private lateinit var buttons: MutableList<Button>
     private var timeLeft = 10
@@ -59,6 +59,7 @@ class TestFragment : Fragment()
     private var useTimer = true
     private var timerEnabled = false
     private var numCorrect = 0
+    private lateinit var questionThread: Thread
     private lateinit var timerThread: Thread
     private lateinit var audioTrack: AudioTrack
     private lateinit var dialog: AlertDialog
@@ -66,12 +67,19 @@ class TestFragment : Fragment()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        // This callback will only be called when MyFragment is at least Started.
+        // This callback will only be called when TestFragment is at least Started.
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             backPressed()
         }
-
-        // The callback can be enabled or disabled here or in the lambda
+//        if (this::questionThread.isInitialized)
+//        {
+//            questionThread.interrupt()
+//            questionThread.destroy()
+//        }
+//        if (this::timerThread.isInitialized)
+//        {
+//            timerThread.interrupt()
+//        }
     }
 
     override fun onCreateView(
@@ -121,8 +129,7 @@ class TestFragment : Fragment()
             buttons.add(button)
         }
 
-        // TODO: Test Logic
-
+        // Test Logic
         // Setup
 
         val numQuestions = when (preferences.getString("numQuestions", "10"))
@@ -239,15 +246,34 @@ class TestFragment : Fragment()
         _binding = null
     }
 
+    /**
+     * Helper method called every time a bin is pressed. Updates [triesLeft], and then follows the following logic:
+     *
+     * 1. If the [freq] the user guessed was correct,
+     *  a. Stop playing tone (if still playing)
+     *  b. Disable the timer
+     *  c. If we're showing immediate feedback, then update the score
+     *  d. Disable the buttons
+     *  e. Start a new [questionThread] after the amount of time specified in [preferences] by feedbackTime
+     * 2. If the [freq] was not correct, and there are no [triesLeft],
+     *  a. Stop playing tone (if still playing)
+     *  b. Disable the timer
+     *  c. If we're showing immediate feedback, then update the score
+     *  d. Disable the buttons
+     *  e. Start a new [questionThread] after the amount of time specified in [preferences] by feedbackTime
+     * 3. If the [freq] was not correct, but there are still [triesLeft],
+     *  a. Change the [button] background to red
+     *  b. Disable the [button]
+     *
+     * @param freq the frequency bin the user guessed
+     * @param button the button the user pressed to guess the frequency bin
+     */
     private fun buttonPress(freq: Int, button: Button)
     {
         binding.root.findViewById<TextView>(R.id.number_try).text = (--triesLeft).toString()
         if (freq == curFreqBin)
         {
-            if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING)
-            {
-                audioTrack.stop()
-            }
+            stopTone()
             timerEnabled = false
             if (preferences.getBoolean("immediateFeedback", true))
             {
@@ -259,10 +285,7 @@ class TestFragment : Fragment()
         }
         else if (triesLeft == 0)
         {
-            if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING)
-            {
-                audioTrack.stop()
-            }
+            stopTone()
             timerEnabled = false
             if (preferences.getBoolean("immediateFeedback", true))
             {
@@ -274,11 +297,17 @@ class TestFragment : Fragment()
         }
         else
         {
-            button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.red)!!, BlendMode.MULTIPLY)
+            button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.md_theme_light_error)!!, BlendMode.MULTIPLY)
             button.isEnabled = false
         }
     }
 
+    /**
+     * Helper method to start a new [Thread] to play a tone.
+     *
+     * @param freq the frequency at which to play the tone at
+     * @param length the amount of time (in ms) to play the tone
+     */
     private fun playTone(freq: Int, length: Int)
     {
         Thread {
@@ -287,6 +316,16 @@ class TestFragment : Fragment()
         }.start()
     }
 
+    /**
+     * Generate the sine wave that represents a specific [freq].
+     *
+     * Originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
+     * and modified by Steve Pomeroy <steve@staticfree.info>.
+     * Adapted for Kotlin by Sam Lavin.
+     *
+     * @param freq the frequency for the sine wave
+     * @param duration the length of the sine wave (in ms)
+     */
     private fun genTone(freq: Int, duration: Int)
     {
         val seconds = duration.toFloat() / 1000f
@@ -313,6 +352,9 @@ class TestFragment : Fragment()
         }
     }
 
+    /**
+     * Helper method to play the [generatedSnd] using the [AudioTrack] class.
+     */
     private fun playSound()
     {
         val audioAttributes = with (Builder())
@@ -334,12 +376,34 @@ class TestFragment : Fragment()
         audioTrack.play()
     }
 
+    /**
+     * Helper method that checks if the [AudioTrack] is still playing, and if so, stop playing it.
+     */
+    private fun stopTone()
+    {
+        if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING)
+        {
+            audioTrack.stop()
+        }
+    }
+
+    /**
+     * Simple helper method that generates a random +1 or -1.
+     *
+     * @return an [Int] that is either a +1 or -1
+     */
     private fun randomPlusOrMinus(): Int
     {
         val array = arrayOf(-1, 1)
         return array.random()
     }
 
+    /**
+     * Sets the text for the question number [TextView] depending on whether or not the number of questions [isInf].
+     *
+     * @param num the current question number
+     * @param isInf whether or not the number of questions is infinite.
+     */
     private fun setQuestionNumText(num: Int, isInf: Boolean)
     {
         if (isInf)
@@ -352,6 +416,22 @@ class TestFragment : Fragment()
         }
     }
 
+    /**
+     * Disable the buttons. For every button, follows the following logic:
+     * 1. If we are to [showFeedback]
+     *  a. If the current button was the incorrect frequency,
+     *   i. Set the button's background color to red
+     *   ii. Disable the button.
+     *  b. If the current button was the CORRECT frequency,
+     *   i. Set the button's background color to green
+     *   ii.Disable the onClick() method for the button
+     *  c. If it was neither the correct or incorrect frequency (aka it was not selected), then simply disable the button.
+     * 2. If we are not to [showFeedback], then simply disable the button.
+     *
+     * @param showFeedback whether or not we are showing the user feedback
+     * @param correctFreq the correct frequency bin
+     * @param incorrectFreq the incorrect frequency bin
+     */
     private fun disableButtons(showFeedback: Boolean, correctFreq: Int?, incorrectFreq: Int?)
     {
         for (button in buttons)
@@ -360,12 +440,12 @@ class TestFragment : Fragment()
             {
                 if (freqTextToVal(button.text as String) == incorrectFreq)
                 {
-                    button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.red)!!, BlendMode.MULTIPLY)
+                    button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.md_theme_light_error)!!, BlendMode.MULTIPLY)
                     button.isEnabled = false
                 }
                 else if (freqTextToVal(button.text as String) == correctFreq)
                 {
-                    button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.green)!!, BlendMode.MULTIPLY)
+                    button.background.colorFilter = BlendModeColorFilter(context?.getColor(R.color.md_theme_light_tertiary)!!, BlendMode.MULTIPLY)
                     button.isClickable = false
                 }
                 else
@@ -380,6 +460,9 @@ class TestFragment : Fragment()
         }
     }
 
+    /**
+     * Method to go back through the [buttons] and re-enable them all.
+     */
     private fun enableButtons()
     {
         for (button in buttons)
@@ -393,6 +476,12 @@ class TestFragment : Fragment()
         }
     }
 
+    /**
+     * Helper method that converts the [freq] [String] to it's corresponding [Int] value.
+     *
+     * @param freq the [String] frequency that we are converting
+     * @return the [Int] value of the converted frequency
+     */
     private fun freqTextToVal(freq: String): Int
     {
         return if (freq.contains('k'))
@@ -409,6 +498,11 @@ class TestFragment : Fragment()
         }
     }
 
+    /**
+     * Helper method that is called whenever we use the back button during the test.
+     *
+     * @return true
+     */
     fun backPressed(): Boolean
     {
         dialog = activity?.let {
@@ -420,7 +514,7 @@ class TestFragment : Fragment()
                     R.string.yes
                 ) { _, _ ->
                     timerEnabled = false
-                    audioTrack.stop()
+                    stopTone()
                     findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
                 }
                 setNegativeButton(R.string.cancel) { _, _ -> }

@@ -1,6 +1,5 @@
 package `in`.samlav.eartrainer
 
-import `in`.samlav.eartrainer.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,11 +9,12 @@ import androidx.navigation.fragment.findNavController
 import `in`.samlav.eartrainer.databinding.FragmentHomeBinding
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * Home fragment
+ *
+ * @constructor Create empty Home fragment
  */
 class HomeFragment : Fragment()
 {
-
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -24,12 +24,10 @@ class HomeFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
+    ): View
     {
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
