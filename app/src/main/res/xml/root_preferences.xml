@@ -1,7 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Test Settings">
+    <PreferenceCategory
+        app:title="General Test Settings" >
 
         <ListPreference
             android:defaultValue="10"
@@ -18,7 +19,16 @@
             app:entries="@array/time_to_answer_entries"
             app:entryValues="@array/time_to_answer_values"
             app:key="timeToAnswer"
-            app:title="Time to Answer (seconds)"
+            app:title="Time to Answer"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:defaultValue="1000"
+            app:defaultValue="1000"
+            app:entries="@array/tone_time_entries"
+            app:entryValues="@array/tone_time_values"
+            app:key="toneTime"
+            app:title="Length Tone is Played for"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
@@ -26,20 +36,26 @@
             app:title="Immediate Feedback"
             app:defaultValue="true" />
 
-        <in.samlav.eartrainer.CustomSeekBar
-            android:key="toneTime"
-            android:layout="@layout/custom_seek_bar"
-            android:title="Time for Tone (seconds)"
-            android:id="@+id/tone_time"
-            app:title="Length Tone is Played for (milliseconds)" />
+        <SeekBarPreference
+            android:defaultValue="3"
+            app:title="Time Feedback is Shown (seconds)"
+            app:showSeekBarValue="true"
+            app:key="feedbackTime"
+            app:min="1"
+            android:max="10" />
 
         <SeekBarPreference
-            android:defaultValue="5"
-            android:title="% Deviation from Center of Bin"
+            android:defaultValue="1"
+            app:title="Number of Tries"
             app:showSeekBarValue="true"
-            app:min="0"
-            android:max="25"
-            app:key="deviation" />
+            app:key="numTries"
+            app:min="1"
+            android:max="10" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Bin Settings" >
 
         <ListPreference
             android:title="Number of Bins"
@@ -53,26 +69,18 @@
             android:title="Which Bands to Exclude"
             android:key="whichBins" />
 
+        <SeekBarPreference
+            android:defaultValue="5"
+            android:title="% Deviation from Center of Bin"
+            app:showSeekBarValue="true"
+            app:min="0"
+            android:max="25"
+            app:key="deviation" />
+
         <SwitchPreference
             app:key="showExcluded"
             app:title="Show Disabled Bins"
             app:defaultValue="false" />
-
-        <SeekBarPreference
-            android:defaultValue="1"
-            app:title="Number of Tries"
-            app:showSeekBarValue="true"
-            app:key="numTries"
-            app:min="1"
-            android:max="10" />
-
-        <SeekBarPreference
-            android:defaultValue="3"
-            app:title="Time Feedback is Shown (seconds)"
-            app:showSeekBarValue="true"
-            app:key="feedbackTime"
-            app:min="1"
-            android:max="10" />
 
     </PreferenceCategory>
 

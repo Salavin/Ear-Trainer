@@ -201,7 +201,7 @@ class TestFragment : Fragment()
                     {
                         curFreqBin
                     }
-                    playTone(freq, preferences.getInt("toneTime", 1000))
+                    preferences.getString("toneTime", "1000")?.let { playTone(freq, it.toInt()) }
                     triesLeft = preferences.getInt("numTries", 1)
                     binding.root.findViewById<TextView>(R.id.number_try).text = triesLeft.toString()
                     if (useTimer)
@@ -214,8 +214,9 @@ class TestFragment : Fragment()
                             {
                                 binding.root.findViewById<TextView>(R.id.time_time_left).text =
                                     preferences.getString("timeToAnswer", "10")
-                            }}, preferences.getInt("toneTime", 1000).toLong())
-                        Handler(Looper.getMainLooper()).postDelayed(timerThread, preferences.getInt("toneTime", 1000).toLong() + 1000)
+                            }}, preferences.getString("toneTime", "1000")!!.toInt().toLong())
+                        Handler(Looper.getMainLooper()).postDelayed(timerThread, preferences.getString("toneTime", "1000")!!
+                            .toInt().toLong() + 1000)
                     }
                     else
                     {
