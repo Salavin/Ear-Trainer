@@ -468,7 +468,7 @@ class TestFragment : Fragment()
     {
         for (button in buttons)
         {
-            if (preferences.getStringSet("whichBins", null)?.contains(button.text) == false)
+            if (!preferences.contains("whichBins") || (preferences.getStringSet("whichBins", null)?.contains(button.text) == false))
             {
                 button.isEnabled = true
                 button.isClickable = true
