@@ -24,8 +24,10 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.random.Random
@@ -186,7 +188,7 @@ class TestFragment : Fragment()
         }
 
         questionThread = Thread {
-            if (findNavController().currentDestination?.id == R.id.TestFragment)
+            if (findNavControllerSafely()?.currentDestination?.id == R.id.TestFragment)
             {
                 enableButtons()
                 if (++questionNum <= numQuestions)
@@ -245,6 +247,20 @@ class TestFragment : Fragment()
     {
         super.onDestroyView()
         _binding = null
+    }
+
+    /**
+     * Helper extension function that only returns a [NavController] if the current [Fragment] is not detached.
+     * Borrowed from https://stackoverflow.com/questions/56041920/fragment-xxx-not-associated-with-a-fragment-manager
+     *
+     * @return [NavController] if the current [Fragment] is not detached, null otherwise]
+     */
+    private fun Fragment.findNavControllerSafely(): NavController? {
+        return if (isAdded) {
+            findNavController()
+        } else {
+            null
+        }
     }
 
     /**
@@ -345,12 +361,43 @@ class TestFragment : Fragment()
         var idx = 0
         for (dVal in sample)
         {
-            // scale to maximum amplitude
-            val `val` = (dVal * 32767).toInt()
+            // scale to amplitude
+            val `val` = (dVal * calculateP(calculateAmplitudeModifier(freq))).toInt()
             // in 16 bit wav PCM, first byte is the low order byte
             generatedSnd[idx++] = (`val` and 0x00ff).toByte()
             generatedSnd[idx++] = ((`val` and 0xff00) ushr 8).toByte()
         }
+    }
+
+    /**
+     * Calculates by how many decibels we should modify the amplitude based on what frequency we are playing.
+     *
+     * @param freq the frequency we are playing
+     * @return a [Float] between 0 and the High End Pad set in Preferences
+     */
+    private fun calculateAmplitudeModifier(freq: Int): Float
+    {
+        val crossoverFreq = preferences.getString("crossoverFreq", "4000")?.toInt()!!
+        if ((preferences.getBoolean("useEQ", true)) && (freq > crossoverFreq))
+        {
+            val highEndPad = preferences.getInt("highEndPad", 3)
+            val transitionBand = crossoverFreq / 2
+
+            /* Check if we are in the transition band */
+            if (freq < crossoverFreq + transitionBand)
+            {
+                return ((freq - crossoverFreq).toFloat() / transitionBand.toFloat()) * highEndPad.toFloat()
+            }
+            /* Else */
+            return highEndPad.toFloat()
+        }
+        /* Else */
+        return 0f
+    }
+
+    fun calculateP(pad: Float): Float
+    {
+        return 32767*(10f.pow(-pad /10f))
     }
 
     /**

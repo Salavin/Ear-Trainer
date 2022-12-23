@@ -19,6 +19,9 @@ class SettingsFragment : PreferenceFragmentCompat()
     lateinit var immediateFeedback: SwitchPreference
     lateinit var numTries: SeekBarPreference
     lateinit var preferences: SharedPreferences
+    lateinit var useEQ: SwitchPreference
+    lateinit var highEndPad: SeekBarPreference
+    lateinit var crossoverFreq: ListPreference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
     {
@@ -28,8 +31,16 @@ class SettingsFragment : PreferenceFragmentCompat()
         whichBins = findPreference("whichBins")!!
         immediateFeedback = findPreference("immediateFeedback")!!
         numTries = findPreference("numTries")!!
+        useEQ = findPreference("useEQ")!!
+        highEndPad = findPreference("highEndPad")!!
+        crossoverFreq = findPreference("crossoverFreq")!!
+
         numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             changeBins(newValue as String)
+            return@OnPreferenceChangeListener true
+        }
+        useEQ.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+            onUseEQChange(newValue as Boolean)
             return@OnPreferenceChangeListener true
         }
         immediateFeedback.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
@@ -53,6 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat()
         }
         numTries.isEnabled = immediateFeedback.isChecked
         changeBins(numBins.value)
+        onUseEQChange(useEQ.isChecked)
     }
 
     /**
@@ -85,5 +97,16 @@ class SettingsFragment : PreferenceFragmentCompat()
                 whichBins.entryValues = resources.getStringArray(R.array.thirty_one_bin_entries)
             }
         }
+    }
+
+    /**
+     * Helper method called whenever the user enables/disables the EQ and enables/disables the proper [Preference]s
+     *
+     * @param newValue
+     */
+    private fun onUseEQChange(newValue: Boolean)
+    {
+        highEndPad.isEnabled = newValue
+        crossoverFreq.isEnabled = newValue
     }
 }

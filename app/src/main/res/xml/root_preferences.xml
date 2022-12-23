@@ -84,4 +84,32 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="EQ Settings">
+
+        <SwitchPreference
+            app:key="useEQ"
+            app:title="Use EQ"
+            app:defaultValue="true" />
+
+        <SeekBarPreference
+            app:key="highEndPad"
+            app:title="High End Pad"
+            app:summary="@string/high_end_pad_summary"
+            app:min="1"
+            android:max="6"
+            app:showSeekBarValue="true"
+            android:defaultValue="3" />
+
+        <ListPreference
+            android:title="Crossover Frequency"
+            android:summary="@string/crossover_summary"
+            app:key="crossoverFreq"
+            app:useSimpleSummaryProvider="false"
+            app:entries="@array/crossover_frequencies_entries"
+            app:entryValues="@array/crossover_frequencies_values"
+            app:defaultValue="4000"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

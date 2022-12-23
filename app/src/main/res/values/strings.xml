@@ -42,4 +42,7 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="ear_trainer">Ear Trainer</string>
+
+    <string name="high_end_pad_summary">How much the high end will be padded (in dB)</string>
+    <string name="crossover_summary">At what frequency the EQ will begin padding. There will also be a transition band that is half of this frequency.</string>
 </resources>
