@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import `in`.samlav.eartrainer.databinding.FragmentHomeBinding
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.compose.ui.res.stringArrayResource
 import androidx.preference.PreferenceManager
 
 /**
@@ -40,7 +41,7 @@ class HomeFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonToTest.setOnClickListener {
-            val whichBins = preferences.getStringSet("whichBins", null)!!
+            val whichBins = preferences.getStringSet("whichBins", emptySet())!!
             val whichBinsEntries = when (preferences.getString("numBins", "31"))
             {
                 "10" -> resources.getStringArray(R.array.ten_bin_entries)
@@ -56,6 +57,7 @@ class HomeFragment : Fragment()
                 {
                     findNavController().navigate(R.id.action_HomeFragment_to_TestFragment)
                     whichBinsError = false
+                    break
                 }
             }
             if (whichBinsError)
