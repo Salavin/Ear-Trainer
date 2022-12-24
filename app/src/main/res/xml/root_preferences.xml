@@ -112,4 +112,13 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="Other">
+
+        <Preference
+            app:title="About"
+            app:key="about" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

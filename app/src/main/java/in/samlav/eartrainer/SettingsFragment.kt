@@ -25,6 +25,7 @@ class SettingsFragment : PreferenceFragmentCompat()
     lateinit var useEQ: SwitchPreference
     lateinit var highEndPad: SeekBarPreference
     lateinit var crossoverFreq: ListPreference
+    lateinit var about: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
     {
@@ -37,6 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat()
         useEQ = findPreference("useEQ")!!
         highEndPad = findPreference("highEndPad")!!
         crossoverFreq = findPreference("crossoverFreq")!!
+        about=findPreference("about")!!
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             backPressed()
@@ -56,6 +58,10 @@ class SettingsFragment : PreferenceFragmentCompat()
         useEQ.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             onUseEQChange(newValue as Boolean)
             return@OnPreferenceChangeListener true
+        }
+        about.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_aboutFragment)
+            return@setOnPreferenceClickListener true
         }
         immediateFeedback.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             if (newValue == true)
