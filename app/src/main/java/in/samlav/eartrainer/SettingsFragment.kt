@@ -2,8 +2,11 @@ package `in`.samlav.eartrainer
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.preference.*
 import androidx.core.content.edit
+import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 
@@ -35,6 +38,17 @@ class SettingsFragment : PreferenceFragmentCompat()
         highEndPad = findPreference("highEndPad")!!
         crossoverFreq = findPreference("crossoverFreq")!!
 
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            backPressed()
+        }
+
+        whichBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener {_, _ ->
+            if (checkWhichBins())
+            {
+                Toast.makeText(context, getString(R.string.which_bins_error), Toast.LENGTH_LONG).show()
+            }
+            return@OnPreferenceChangeListener true
+        }
         numBins.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             changeBins(newValue as String)
             return@OnPreferenceChangeListener true
@@ -108,5 +122,40 @@ class SettingsFragment : PreferenceFragmentCompat()
     {
         highEndPad.isEnabled = newValue
         crossoverFreq.isEnabled = newValue
+    }
+
+    /**
+     * Helper function to determine if the user has selected all of the bins for the Which Bins to Exclude [Preference].
+     *
+     * @return true if not all of the bins are selected, false otherwise
+     */
+    fun checkWhichBins(): Boolean
+    {
+        for (bin: CharSequence in whichBins.entries)
+        {
+            if (!whichBins.values.contains(bin.toString()))
+            {
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * Handles when the User attempts to leave the [SettingsFragment]. If all of the bins are selected in the Which Bins to Exclude, it will not let them exit, and instead throw and error in the form of a [Toast].
+     *
+     * @return true
+     */
+    fun backPressed(): Boolean
+    {
+        if (checkWhichBins())
+        {
+            findNavController().navigate(R.id.action_settingsFragment_to_HomeFragment)
+        }
+        else
+        {
+            Toast.makeText(context, getString(R.string.which_bins_error), Toast.LENGTH_LONG).show()
+        }
+        return true
     }
 }

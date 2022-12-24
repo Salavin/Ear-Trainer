@@ -60,16 +60,28 @@ class MainActivity : AppCompatActivity()
     override fun onSupportNavigateUp(): Boolean
     {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        if (navController.currentDestination?.id == R.id.TestFragment)
+        when (navController.currentDestination?.id)
         {
-            val navHostFragment =
-                supportFragmentManager.primaryNavigationFragment as NavHostFragment?
-            val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
-            val fragment: Fragment? = fragmentManager.primaryNavigationFragment
+            R.id.TestFragment -> {
+                val navHostFragment =
+                    supportFragmentManager.primaryNavigationFragment as NavHostFragment?
+                val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
+                val fragment: Fragment? = fragmentManager.primaryNavigationFragment
 
-            return (fragment as TestFragment).backPressed()
+                return (fragment as TestFragment).backPressed()
+            }
+            R.id.settingsFragment -> {
+                val navHostFragment =
+                    supportFragmentManager.primaryNavigationFragment as NavHostFragment?
+                val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
+                val fragment: Fragment? = fragmentManager.primaryNavigationFragment
+
+                return (fragment as SettingsFragment).backPressed()
+            }
+            else -> {
+                return navController.navigateUp(appBarConfiguration)
+                        || super.onSupportNavigateUp()
+            }
         }
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 }
