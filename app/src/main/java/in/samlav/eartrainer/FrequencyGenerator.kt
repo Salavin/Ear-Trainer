@@ -48,14 +48,13 @@ class FrequencyGenerator(freq: Int, duration: Int, val sampleRate: Int = 44100)
 
         // convert to 16 bit pcm sound array
         // assumes the sample buffer is normalised.
-        var idx = 0
-        for (dVal in sample)
+        for ((i, dVal) in sample.withIndex())
         {
             // scale to amplitude
-            val `val` = (dVal * calculateP(calculateAmplitudeModifier(freq))).toInt()
+            val `val` = (dVal * calculateP(calculateAmplitudeModifier(freq)) * rampFunc(i, duration)).toInt()
             // in 16 bit wav PCM, first byte is the low order byte
-            generatedSnd[idx++] = (`val` and 0x00ff).toByte()
-            generatedSnd[idx++] = ((`val` and 0xff00) ushr 8).toByte()
+            generatedSnd[i] = (`val` and 0x00ff).toByte()
+            generatedSnd[i] = ((`val` and 0xff00) ushr 8).toByte()
         }
     }
 
@@ -91,7 +90,33 @@ class FrequencyGenerator(freq: Int, duration: Int, val sampleRate: Int = 44100)
      */
     private fun calculateP(pad: Float): Float
     {
-        val p = 32767*(10f.pow(-pad /10f))
-        return p
+        return 32767 * (10f.pow(-pad / 10f))
+    }
+
+    /**
+     * Ramp function to fade in/out the sine wave to avoid clicks.
+     *
+     * @param index the current index of the sample
+     * @param duration the total duration of the sound (in ms)
+     * @return a value between 0.0 and 1.0 that represents the ramp
+     */
+    private fun rampFunc(index: Int, duration: Int): Float
+    {
+        /* Number of samples to ramp up/down */
+        val numSamples = 0.01 * sampleRate
+        val totalNumSamples = (duration.toFloat() / 1000f) * sampleRate
+        if (index < numSamples)
+        {
+            return index.toFloat() / numSamples.toFloat()
+        }
+        if (index > totalNumSamples - numSamples)
+        {
+            val startIndex = totalNumSamples - numSamples
+            val scaledIndex = index - startIndex
+            val scaledEndIndex = totalNumSamples - startIndex
+            return 1 - (scaledIndex.toFloat() / scaledEndIndex.toFloat())
+        }
+        /* Else */
+        return 1f
     }
 }
