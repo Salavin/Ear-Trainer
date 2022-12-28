@@ -385,8 +385,7 @@ class TestFragment : Fragment()
         val audioAttributes = with (Builder())
         {
             setUsage(USAGE_MEDIA)
-            setContentType(CONTENT_TYPE_SONIFICATION)
-            setFlags(FLAG_AUDIBILITY_ENFORCED)
+            setContentType(CONTENT_TYPE_UNKNOWN)
             build()
         }
         val audioFormat = with (AudioFormat.Builder())
