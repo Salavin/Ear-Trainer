@@ -26,4 +26,6 @@
     <string name="website">Website</string>
     <string name="project_repository">Project Repository</string>
     <string name="buy_me_a_coffee">Buy Me a Coffee (or tea in my case)</string>
+    <string name="resume">Resume</string>
+    <string name="exit">Exit</string>
 </resources>

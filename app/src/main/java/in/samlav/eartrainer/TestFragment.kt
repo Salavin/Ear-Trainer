@@ -58,6 +58,7 @@ class TestFragment : Fragment()
     private var useTimer = true
     private var timerEnabled = false
     private var numCorrect = 0
+    private var userExited = false
     private lateinit var questionThread: Thread
     private lateinit var timerThread: Thread
     private lateinit var audioTrack: AudioTrack
@@ -246,6 +247,41 @@ class TestFragment : Fragment()
     {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onPause()
+    {
+        userExited = true
+        timerEnabled = false
+        stopTone()
+        super.onPause()
+    }
+
+    override fun onResume()
+    {
+        if (userExited)
+        {
+            dialog = activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setTitle("Resume Test?")
+                    setMessage("Would you like to resume the test where you left off, or quit?")
+                    setPositiveButton(
+                        R.string.resume
+                    ) { _, _ ->
+                        Handler(Looper.getMainLooper()).post(questionThread)
+                    }
+                    setNegativeButton(R.string.exit) { _, _ ->
+                        findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
+                    }
+                }
+
+                // Create the AlertDialog
+                builder.create()
+            }!!
+            dialog.show()
+        }
+        super.onResume()
     }
 
     /**
