@@ -59,6 +59,7 @@ class TestFragment : Fragment()
     private var timerEnabled = false
     private var numCorrect = 0
     private var userExited = false
+    private var exitDialogShowing = false
     private lateinit var questionThread: Thread
     private lateinit var timerThread: Thread
     private lateinit var audioTrack: AudioTrack
@@ -259,7 +260,7 @@ class TestFragment : Fragment()
 
     override fun onResume()
     {
-        if (userExited)
+        if (userExited && !exitDialogShowing)
         {
             dialog = activity?.let {
                 val builder = AlertDialog.Builder(it)
@@ -269,9 +270,11 @@ class TestFragment : Fragment()
                     setPositiveButton(
                         R.string.resume
                     ) { _, _ ->
+                        exitDialogShowing = false
                         Handler(Looper.getMainLooper()).post(questionThread)
                     }
                     setNegativeButton(R.string.exit) { _, _ ->
+                        exitDialogShowing = false
                         findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
                     }
                 }
@@ -280,6 +283,7 @@ class TestFragment : Fragment()
                 builder.create()
             }!!
             dialog.show()
+            exitDialogShowing = true
         }
         super.onResume()
     }
