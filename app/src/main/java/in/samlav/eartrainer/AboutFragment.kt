@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 
 /**
  * A simple [Fragment] subclass.
@@ -17,6 +18,7 @@ class AboutFragment : Fragment()
     private lateinit var websiteButton: Button
     private lateinit var repositoryButton: Button
     private lateinit var buyMeACoffeeButton: Button
+    private lateinit var versionText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +35,7 @@ class AboutFragment : Fragment()
         websiteButton = view.findViewById(R.id.button_website)
         repositoryButton = view.findViewById(R.id.button_project_repository)
         buyMeACoffeeButton = view.findViewById(R.id.button_buy_me_a_coffee)
+        versionText = view.findViewById(R.id.text_version)
         websiteButton.setOnClickListener {
             goToUrl("https://samlav.in")
         }
@@ -42,6 +45,7 @@ class AboutFragment : Fragment()
         buyMeACoffeeButton.setOnClickListener {
             goToUrl("https://www.buymeacoffee.com/salavin")
         }
+        versionText.text = getString(R.string.version, BuildConfig.VERSION_NAME)
     }
 
     /**
