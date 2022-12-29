@@ -2,7 +2,6 @@ package `in`.samlav.eartrainer
 
 import `in`.samlav.eartrainer.databinding.FragmentTestBinding
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -27,9 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.math.sin
 import kotlin.random.Random
 
 /**
@@ -58,7 +55,6 @@ class TestFragment : Fragment()
     private var useTimer = true
     private var timerEnabled = false
     private var numCorrect = 0
-    private var userExited = false
     private var exitDialogShowing = false
     private lateinit var questionThread: Thread
     private lateinit var timerThread: Thread
@@ -70,7 +66,7 @@ class TestFragment : Fragment()
         super.onCreate(savedInstanceState)
         // This callback will only be called when TestFragment is at least Started.
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            backPressed()
+            exitDialog()
         }
 //        if (this::questionThread.isInitialized)
 //        {
@@ -252,40 +248,8 @@ class TestFragment : Fragment()
 
     override fun onPause()
     {
-        userExited = true
-        timerEnabled = false
-        stopTone()
+        exitDialog()
         super.onPause()
-    }
-
-    override fun onResume()
-    {
-        if (userExited && !exitDialogShowing)
-        {
-            dialog = activity?.let {
-                val builder = AlertDialog.Builder(it)
-                builder.apply {
-                    setTitle("Resume Test?")
-                    setMessage("Would you like to resume the test where you left off, or quit?")
-                    setPositiveButton(
-                        R.string.resume
-                    ) { _, _ ->
-                        exitDialogShowing = false
-                        Handler(Looper.getMainLooper()).post(questionThread)
-                    }
-                    setNegativeButton(R.string.exit) { _, _ ->
-                        exitDialogShowing = false
-                        findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
-                    }
-                }
-
-                // Create the AlertDialog
-                builder.create()
-            }!!
-            dialog.show()
-            exitDialogShowing = true
-        }
-        super.onResume()
     }
 
     /**
@@ -531,27 +495,37 @@ class TestFragment : Fragment()
      *
      * @return true
      */
-    fun backPressed(): Boolean
+    fun exitDialog(): Boolean
     {
-        dialog = activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setTitle("Exit Test?")
-                setMessage("Are you sure you want to exit the test? Your progress will be lost.")
-                setPositiveButton(
-                    R.string.yes
-                ) { _, _ ->
-                    timerEnabled = false
-                    stopTone()
-                    findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
-                }
-                setNegativeButton(R.string.cancel) { _, _ -> }
-            }
+        timerEnabled = false
+        stopTone()
 
-            // Create the AlertDialog
-            builder.create()
-        }!!
-        dialog.show()
+        if (!exitDialogShowing && findNavControllerSafely()?.currentDestination?.id == R.id.TestFragment)
+        {
+            dialog = activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setTitle("Resume Test?")
+                    setMessage("Would you like to resume the test where you left off, or quit?")
+                    setPositiveButton(
+                        R.string.resume
+                    ) { _, _ ->
+                        exitDialogShowing = false
+                        Handler(Looper.getMainLooper()).post(questionThread)
+                    }
+                    setNegativeButton(R.string.exit) { _, _ ->
+                        exitDialogShowing = false
+                        findNavController().navigate(R.id.action_TestFragment_to_HomeFragment)
+                    }
+                    setCancelable(false)
+                }
+
+                // Create the AlertDialog
+                builder.create()
+            }!!
+            dialog.show()
+            exitDialogShowing = true
+        }
         return true
     }
 }

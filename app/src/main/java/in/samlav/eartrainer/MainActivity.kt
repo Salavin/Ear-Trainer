@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity()
                 val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
                 val fragment: Fragment? = fragmentManager.primaryNavigationFragment
 
-                return (fragment as TestFragment).backPressed()
+                return (fragment as TestFragment).exitDialog()
             }
             R.id.settingsFragment -> {
                 val navHostFragment =
