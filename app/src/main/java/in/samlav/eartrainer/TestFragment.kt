@@ -1,7 +1,7 @@
 package `in`.samlav.eartrainer
 
 import `in`.samlav.eartrainer.databinding.FragmentTestBinding
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.SharedPreferences
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -503,7 +504,7 @@ class TestFragment : Fragment()
         if (!exitDialogShowing && findNavControllerSafely()?.currentDestination?.id == R.id.TestFragment)
         {
             dialog = activity?.let {
-                val builder = AlertDialog.Builder(it)
+                val builder = MaterialAlertDialogBuilder(it)
                 builder.apply {
                     setTitle("Resume Test?")
                     setMessage("Would you like to resume the test where you left off, or quit?")

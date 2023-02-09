@@ -22,7 +22,7 @@
     <string name="high_end_pad_summary">How much the high end will be padded (in dB)</string>
     <string name="crossover_summary">At what frequency the EQ will begin padding. There will also be a transition band that is half of this frequency.</string>
     <string name="which_bins_error">Error: cannot have every bin be excluded!</string>
-    <string name="me">App developed by Sam Lavin.</string>
+    <string name="me">App developed by Sam Lavin</string>
     <string name="image_of_me">Image of myself.</string>
     <string name="website">Website</string>
     <string name="project_repository">Project Repository</string>
